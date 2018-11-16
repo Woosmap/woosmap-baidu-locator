@@ -1,0 +1,164 @@
+#main {
+    display: flex;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+#my-map-container {
+    display: flex;
+    flex-basis: 65vw;
+    order: 2;
+    position: relative;
+    height: 100%;
+}
+
+#my-map {
+    display: flex;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+#sidebar-container {
+    display: flex;
+    flex-basis: 35vw;
+    order: 1;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .12);
+    overflow: hidden;
+    position: relative;
+    height: 100%;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+    font-size: 15px !important;
+}
+
+#sidebar {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+#search-container {
+    display: flex;
+    height: 55px;
+    position: relative;
+    box-shadow: none;
+    width: 100%;
+    flex-shrink: 0;
+}
+
+.controls {
+    display: flex;
+    padding: 0 1.5rem;
+    flex: 1;
+    position: relative;
+}
+
+.controls.active {
+    background: #FAFAFA;
+}
+
+#listing-stores-container {
+    display: flex;
+    position: relative;
+    overflow: auto;
+    justify-content: space-between;
+    flex-direction: column;
+}
+
+.store-card {
+    padding: .8rem 1.5rem;
+    cursor: pointer;
+    vertical-align: middle;
+}
+
+.store-card:hover:not(.active) {
+    background-color: #fafafa;
+}
+
+.store-card.active {
+    background-color: #f6f6f6;
+}
+
+.selected_card {
+    background-color: #f6f6f6;
+}
+
+input[type=search] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none
+}
+
+input[type=search]::-webkit-search-cancel-button, input[type=search]::-webkit-search-decoration {
+    -webkit-appearance: none
+}
+
+#search-input {
+    height: 100%;
+    width: 100%;
+    border: 0;
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    border-bottom: 1px solid rgba(0, 0, 0, .12);
+    padding-right: 4.8rem;
+    font-size: 15px !important;
+}
+
+#search-input:focus {
+    outline: none;
+}
+
+.buttonContainer {
+    display: block;
+    width: 4.8rem;
+    height: 100%;
+    position: absolute;
+    right: 0
+}
+
+.button {
+    color: rgba(0, 0, 0, .56);
+    transition: color .2s ease-out;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    border: 0;
+    padding: 0;
+    border-radius: 0;
+}
+
+::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #d1d1d1;
+}
+
+::-webkit-scrollbar-track {
+    background-color: #F7F7F7;
+}
+
+.tangram-suggestion{
+    top: 1px !important;
+    border: none !important;
+}
+.tangram-suggestion .route-icon {
+    overflow: hidden;
+    padding-left: 20px;
+    font-style: normal;
+    background: url(http://webmap1.map.bdstatic.com/wolfman/static/common/images/ui3/tools/suggestion-icon_013979b.png) no-repeat 0 -14px;
+}
+

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Baidu Store Locator with Woosmap</title>
+    <script src="https://sdk.woosmap.com/locator/loader.js"></script>
+    <script src="https://api.map.baidu.com/api?v=3.0&ak=XXX"></script>
+</head>
+<body>
+
+<div id="main">
+    <div id="my-map-container">
+        <div id="my-map"></div>
+    </div>
+
+    <div id="sidebar-container">
+        <div id="sidebar">
+            <div id="search-container">
+                <div class="controls">
+                    <input id="search-input" type="search" placeholder="Search an Address..."/>
+                    <div class="buttonContainer">
+                        <button id="search-button" class="button" aria-label="Search an Address...">
+                            <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1"
+                                 style="vertical-align: middle;width: 24px; height: 24px;" focusable="false">
+                                <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                    <g id="search" fill-rule="nonzero" fill="#808080">
+                                        <path d="M16.0824,17.406 C14.3832,18.81 12.2034,19.6536 9.8268,19.6536 C4.3998,19.6536 0,15.2544 0,9.8268 C0,4.3998 4.3998,0 9.8268,0 C15.2544,0 19.6536,4.3998 19.6536,9.8268 C19.6536,12.2028 18.81,14.3832 17.406,16.0824 L23.7264,22.4028 C24.0906,22.767 24.0924,23.3568 23.724,23.724 C23.358,24.09 22.7658,24.09 22.4028,23.7264 L16.0824,17.406 Z M9.8268,17.7822 C14.2206,17.7822 17.7828,14.2206 17.7828,9.8262 C17.7828,5.4342 14.2206,1.872 9.8268,1.872 C5.4336,1.872 1.872,5.4336 1.872,9.8268 C1.872,14.2206 5.4336,17.7828 9.8268,17.7828 L9.8268,17.7822 Z"
+                                              id="Shape"></path>
+                                    </g>
+                                </g>
+                            </svg>
+                        </button>
+                    </div>
+                    <span class="search_clear"></span>
+                </div>
+            </div>
+            <section id="listing-stores-container">
+
+            </section>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+
+

@@ -1,0 +1,28 @@
+{
+  "name": "baidu-woosmap-storelocator",
+  "version": "1.0.0",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/woosmap/baidu-woosmap-storelocator"
+  },
+  "bugs": {
+    "url": "https://github.com/woosmap/baidu-woosmap-storelocator/issues"
+  },
+  "homepage": "https://github.com/woosmap/baidu-woosmap-storelocator",
+  "scripts": {
+    "start": "cross-env DEBUG=yes webpack-dev-server --inline --content-base build --history-api-fallback --host 0.0.0.0",
+    "build": "webpack"
+  },
+  "devDependencies": {
+    "extract-text-webpack-plugin": "^3.0.2",
+    "css-loader": "^0.28.7",
+    "style-loader": "^0.19.1",
+    "cross-env": "^5.0.1",
+    "eslint": "^4.3.0",
+    "eslint-loader": "^1.9.0",
+    "html-webpack-plugin": "^2.29.0",
+    "webpack": "^3.3.0",
+    "webpack-dev-server": "^2.9.7"
+  }
+}
