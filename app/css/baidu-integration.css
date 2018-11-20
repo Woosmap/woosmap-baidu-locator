@@ -27,7 +27,7 @@
 #sidebar-container {
     display: flex;
     flex-basis: 35vw;
-    min-width: 320px !important;
+    min-width: 365px !important;
     order: 1;
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .12);
     overflow: hidden;
