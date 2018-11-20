@@ -27,6 +27,7 @@
 #sidebar-container {
     display: flex;
     flex-basis: 35vw;
+    min-width: 320px !important;
     order: 1;
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .12);
     overflow: hidden;
@@ -44,6 +45,7 @@
     left: 0;
     right: 0;
     bottom: 0;
+    background: url(https://images.woosmap.com/starbucks-bg.png) center center no-repeat;
 }
 
 #search-container {
@@ -53,43 +55,80 @@
     box-shadow: none;
     width: 100%;
     flex-shrink: 0;
+    z-index: 1;
+    padding-top: 10px;
 }
 
 .controls {
     display: flex;
-    padding: 0 1.5rem;
+    padding: 0 1.3rem;
     flex: 1;
     position: relative;
+    webkit-box-pack: justify !important;
+    -ms-flex-pack: justify !important;
+    justify-content: space-between !important;
 }
 
-.controls.active {
-    background: #FAFAFA;
-}
-
-#listing-stores-container {
+#listing-stores-container, #selected-store-container {
     display: flex;
-    position: relative;
     overflow: auto;
     justify-content: space-between;
     flex-direction: column;
 }
 
-.store-card {
-    padding: .8rem 1.5rem;
+#listing-stores-container {
+    position: relative;
+    background: rgba(255, 255, 255, 0.8);
+}
+
+#selected-store-container {
+    display: none;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    overflow-x: hidden;
+    border-bottom: 8px solid #382F2D;
+    background: rgba(255, 255, 255, 0.8);
+}
+
+.selected-store-card {
     cursor: pointer;
     vertical-align: middle;
+    line-height: 2em;
+    border-bottom: 1px solid rgba(0, 0, 0, .08);
 }
 
-.store-card:hover:not(.active) {
-    background-color: #fafafa;
+.selected-store-card .hero {
+    background: #006341;
+    padding: .8rem 1.4rem;
+    font-size: 18px;
+    color: #FFF;
 }
 
-.store-card.active {
-    background-color: #f6f6f6;
+.selected-store-card .content {
+    padding: .8rem 1.4rem;
+    color: #8e8e8e;
 }
 
-.selected_card {
-    background-color: #f6f6f6;
+#listing-stores-container.active:before {
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.3);
+    z-index: 1;
+    content: '';
+    width: 100%;
+    height: 3px;
+    margin-top: -3px;
+    position: absolute;
+}
+
+.store-card {
+    padding: .8rem 0;
+    cursor: pointer;
+    vertical-align: middle;
+    line-height: 2em;
+    border-bottom: 1px solid rgba(0, 0, 0, .08);
+    margin: 0 1.3rem;
 }
 
 input[type=search] {
@@ -112,16 +151,29 @@ input[type=search]::-webkit-search-cancel-button, input[type=search]::-webkit-se
     white-space: nowrap;
     border-bottom: 1px solid rgba(0, 0, 0, .12);
     padding-right: 4.8rem;
+    padding-left: .6em;
     font-size: 15px !important;
 }
 
-#search-input:focus {
+#search-input:focus, .button:focus {
     outline: none;
+}
+
+#search-container.active {
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .12);
+}
+
+#search-input.selected-store {
+    border-bottom-color: transparent;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2), 0 -1px 0 rgba(0, 0, 0, 0.02);
+    border-radius: 3px;
+    transition-property: background, box-shadow;
+    transition-duration: 0.3s;
 }
 
 .buttonContainer {
     display: block;
-    width: 4.8rem;
+    width: 5.2rem;
     height: 100%;
     position: absolute;
     right: 0
@@ -151,14 +203,71 @@ input[type=search]::-webkit-search-cancel-button, input[type=search]::-webkit-se
     background-color: #F7F7F7;
 }
 
-.tangram-suggestion{
-    top: 1px !important;
+.tangram-suggestion {
     border: none !important;
 }
+
 .tangram-suggestion .route-icon {
     overflow: hidden;
     padding-left: 20px;
     font-style: normal;
-    background: url(http://webmap1.map.bdstatic.com/wolfman/static/common/images/ui3/tools/suggestion-icon_013979b.png) no-repeat 0 -14px;
+    background: url(//webmap0.bdimg.com/wolfman/static/common/images/retina/suggestion-default-2x_f1b98be.png) no-repeat 0 2px !important;
+    line-height: 36px !important;
+    background-size: 12px 12px !important;
 }
 
+.tangram-suggestion-main {
+    background-color: #fff;
+    border-radius: 0 0 2px 2px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    top: 65px !important;
+}
+
+.store-photo {
+    margin-left: 10px;
+}
+
+.store-photo img {
+    height: 92px;
+    width: 80px;
+    vertical-align: top;
+}
+
+.store-photo-header {
+    overflow: hidden;
+    direction: ltr;
+    display: block;
+    width: 100%;
+    height: 250px;
+}
+
+.store-photo-header img {
+    width: 100%;
+}
+
+#store-address {
+    font-size: .9em;
+    color: #8e8e8e;
+}
+
+.store-photo-list ul {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    width: 100%;
+}
+
+.store-photo-list ul li {
+    flex: 1;
+    margin-right: 10px;
+    width: 33%;
+    position: relative;
+}
+
+.store-photo-list ul li img {
+    width: 100%;
+}
+
+.store-photo-list ul li:last-child {
+    margin-right: 0;
+}

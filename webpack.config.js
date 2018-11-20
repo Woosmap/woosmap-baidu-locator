@@ -1,10 +1,11 @@
 "use strict";
 var webpack = require('webpack');
+var CopyWebpackPlugin = require('copy-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 var webpackConfig = {
-    entry: ['./app/src/init.js', './app/css/baidu-integration.css'],
+    entry: ['./app/src/init.js', './app/css/effects.css', './app/css/baidu-integration.css'],
 
     output: {path: __dirname + '/build', filename: "baidu-integration.js", publicPath: "/"},
 
@@ -21,7 +22,10 @@ var webpackConfig = {
             template: 'app/app.html',
             inject: 'head'
         }),
-        new ExtractTextPlugin("baidu-integration.css")
+        new ExtractTextPlugin("baidu-integration.css"),
+        new CopyWebpackPlugin([
+            {from: 'app/images', to: 'images'}
+        ]),
     ]
 };
 webpackConfig.module.loaders.push({
