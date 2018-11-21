@@ -179,8 +179,8 @@
             }
             woosmap.$('#search-input').addClass('selected-store');
             $selectedStoreHTML.show().html($selectedStoreCell);
-            renderRandomPhotos($selectedStoreHTML, '.store-photo-header', photosSrcFull, "/images/full/");
-            renderRandomPhotos($selectedStoreHTML, '.store-photo-list', photosSrcThumbs, "/images/thumbs/");
+            renderRandomPhotos($selectedStoreHTML, '.store-photo-header', photosSrcFull, "./images/full/");
+            renderRandomPhotos($selectedStoreHTML, '.store-photo-list', photosSrcThumbs, "./images/thumbs/");
         }
         else {
             $selectedStoreHTML.removeClass().addClass('animated fadeOutRight');
@@ -236,7 +236,7 @@
         };
 
         tableview.setOnCellCreatedCallback(function (cell) {
-            renderRandomPhotos(cell[0], '.store-photo', photosSrcThumbs, "/images/thumbs/");
+            renderRandomPhotos(cell[0], '.store-photo', photosSrcThumbs, "./images/thumbs/");
         });
 
         mapView.bindTo('stores', tableview, 'stores', false);

@@ -7,7 +7,7 @@ var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var webpackConfig = {
     entry: ['./app/src/init.js', './app/css/effects.css', './app/css/baidu-integration.css'],
 
-    output: {path: __dirname + '/build', filename: "baidu-integration.js", publicPath: "/"},
+    output: {path: __dirname + '/build', filename: "baidu-integration.js", publicPath: "./"},
 
     module: {
         loaders: []
