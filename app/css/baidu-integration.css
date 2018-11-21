@@ -90,8 +90,28 @@
     left: 0;
     right: 0;
     overflow: auto;
-    border-bottom: 8px solid #382F2D;
     background: rgba(255, 255, 255, 0.8);
+}
+
+#search-here {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding-top: 10%;
+}
+
+#search-here button {
+    background-color: #008248;
+    border: 1px solid #008248;
+    color: #fff;
+    padding: 1rem 2rem;
+    border-radius: 2px;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.2;
+    text-align: center;
+    cursor: pointer;
 }
 
 .selected-store-card {

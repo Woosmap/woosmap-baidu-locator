@@ -157,7 +157,9 @@
     }
 
     function renderRandomPhotos(cell, selector, photosSrc, rootPath) {
-        woosmap.$(cell).find(selector + " img").each(function () {
+        console.log(cell, selector);
+        woosmap.$(cell).find(selector + " img").each(function (index) {
+            console.log(index);
             woosmap.$(this).attr("src", rootPath + photosSrc[Math.floor(Math.random() * photosSrc.length)]);
         });
     }
@@ -179,6 +181,7 @@
             }
             woosmap.$('#search-input').addClass('selected-store');
             $selectedStoreHTML.show().html($selectedStoreCell);
+            $selectedStoreHTML.addClass('animated fadeInRight');
             renderRandomPhotos($selectedStoreHTML, '.store-photo-header', photosSrcFull, "./images/full/");
             renderRandomPhotos($selectedStoreHTML, '.store-photo-list', photosSrcThumbs, "./images/thumbs/");
         }
@@ -205,6 +208,18 @@
         const url = store.properties.contact.website;
         store.properties.openlabel = (store.properties.open.open_now) ? "Open Now" : "Close";
         return templateRenderer.render(store.properties);
+    }
+
+    function searchStores(dataSource, tableView, latlng) {
+        dataSource.searchStoresByParameters(
+            new woosmap.search.SearchParameters({
+                lat: latlng.lat,
+                lng: latlng.lng,
+                storesByPage: 10
+            }), function (stores) {
+                tableView.set('stores', stores.features);
+                toggleAndSlideTableview();
+            });
     }
 
     function main() {
@@ -248,16 +263,15 @@
         };
 
         registerAutocomplete(map, "search-input", function (latlng) {
+            searchStores(dataSource, tableview, latlng);
             displayMarkerSearch(map, latlng);
-            dataSource.searchStoresByParameters(
-                new woosmap.search.SearchParameters({
-                    lat: latlng.lat,
-                    lng: latlng.lng,
-                    storesByPage: 10
-                }), function (stores) {
-                    tableview.set('stores', stores.features);
-                    toggleAndSlideTableview();
-                });
+        });
+        woosmap.$("#search-here-btn").click(function () {
+            const latlngPoint = map.getCenter();
+            searchStores(dataSource, tableview, latlngPoint);
+            displayMarkerSearch(map, latlngPoint);
+            woosmap.$("#search-here").remove();
+            currentSearch = '北京市';
         });
     }
 
