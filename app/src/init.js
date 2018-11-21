@@ -26,12 +26,13 @@
         },
         breakPoint: 13
     };
-    const photosSrcThumbs = ["/images/1.jpg", "/images/2.jpg", "/images/3.jpg", "/images/4.jpg", "/images/5.jpg"];
-    const photosSrcFull = ["/images/full/1.jpg", "/images/full/2.jpg","/images/full/3.jpg", "/images/full/4.jpg","/images/full/5.jpg", "/images/full/6.jpg","/images/full/7.jpg", "/images/full/8.jpg","/images/full/9.jpg", "/images/full/10.jpg", "/images/full/11.jpg", "/images/full/12.jpg"];
+    const photosSrcThumbs = ["1.jpg", "2.jpg", "3.jpg", "4.jpg", "5.jpg", "6.jpg", "7.jpg", "8.jpg", "9.jpg", "10.jpg", "11.jpg", "12.jpg", "13.jpg", "14.jpg", "15.jpg", "16.jpg", "17.jpg", "18.jpg", "19.jpg", "20.jpg", "21.jpg", "22.jpg", "23.jpg", "24.jpg", "25.jpg", "26.jpg", "27.jpg", "28.jpg", "29.jpg", "30.jpg", "31.jpg", "32.jpg", "33.jpg", "34.jpg", "35.jpg", "36.jpg"];
+    const photosSrcFull = ["1.jpg", "2.jpg", "3.jpg", "4.jpg", "5.jpg", "6.jpg", "7.jpg", "8.jpg", "9.jpg", "10.jpg", "11.jpg", "12.jpg", "13.jpg", "14.jpg", "15.jpg", "16.jpg", "17.jpg", "18.jpg", "19.jpg", "20.jpg", "21.jpg", "22.jpg", "23.jpg"];
     const iconSearchLoc = new BMap.Icon("https://www.woosmap.com/assets/locationanimation.svg", new BMap.Size(56, 56));
     let markerSearchLoc = new BMap.Marker(null, {icon: iconSearchLoc});
     let polyLineRoute = new BMap.Polyline(null, {strokeColor: "#3379C2", strokeOpacity: 1, strokeWeight: 8});
     let polyLineOverRoute = new BMap.Polyline(null, {strokeColor: "#01B3FD", strokeOpacity: 1, strokeWeight: 5});
+    let currentSearch = "";
 
     function getMap() {
         const map = new BMap.Map('my-map');
@@ -61,17 +62,31 @@
     function registerAutocomplete(map, inputId, callback) {
         const localSearch = new BMap.LocalSearch(map, {
             onSearchComplete: function (searchResult) {
-                if (searchResult.getPoi(0)) {
-                    const latlng = searchResult.getPoi(0).point;
-                    callback(latlng);
+                try {
+                    if (searchResult.getPoi(0)) {
+                        const latlng = searchResult.getPoi(0).point;
+                        callback(latlng);
+                    }
+                    else {
+                        console.log("no location attached to this search");
+                    }
                 }
-                else {
+                catch (e) {
                     console.log("no location attached to this search");
+                }
+                finally {
+                    woosmap.$('.buttonContainer.load').hide();
+                    woosmap.$('.buttonContainer.clear').show();
                 }
             }
         });
 
         const autocomplete = new BMap.Autocomplete({"input": inputId, "location": map});
+        woosmap.$('#clear-button').click(function () {
+            autocomplete.setInputValue('');
+            woosmap.$('.buttonContainer.clear').hide();
+            woosmap.$('#' + inputId).focus();
+        });
 
         function buildSearchText(autocompleteItem) {
             let searchText = autocompleteItem.business + " "
@@ -98,7 +113,10 @@
         });
 
         autocomplete.addEventListener("onconfirm", function (e) {
+            woosmap.$('.buttonContainer.clear').hide();
+            woosmap.$('.buttonContainer.load').show();
             let valueToSearch = buildSearchText(e.item.value);
+            currentSearch = valueToSearch;
             localSearch.search(valueToSearch);
             autocomplete.setInputValue(valueToSearch);
         });
@@ -110,16 +128,25 @@
                 map.removeOverlay(polyLineRoute);
                 map.removeOverlay(polyLineOverRoute);
                 if (driving.getStatus() === BMAP_STATUS_SUCCESS) {
+                    const drivingPanelHTML = [];
                     const firstPlan = results.getPlan(0);
-                    for (var i = 0; i < firstPlan.getNumRoutes(); i++) {
-                        var route = firstPlan.getRoute(i);
+                    drivingPanelHTML.push("<div class='flex-distance-duration'>" + firstPlan.getDistance() + " | " + firstPlan.getDuration() + "</div>");
+                    drivingPanelHTML.push("<div class='flex-start-end-step'><span class='icon-driving start'></span>" + currentSearch + "</div>");
+                    for (let i = 0; i < firstPlan.getNumRoutes(); i++) {
+                        const route = firstPlan.getRoute(i);
                         if (route.getDistance(false) > 0) {
                             polyLineRoute.setPath(route.getPath());
                             polyLineOverRoute.setPath(route.getPath());
                             map.addOverlay(polyLineRoute);
                             map.addOverlay(polyLineOverRoute);
                         }
+                        for (let j = 0; j < route.getNumSteps(); j++) {
+                            const step = route.getStep(j);
+                            drivingPanelHTML.push("<div class='flex-step'>" + step.getDescription() + "</div>");
+                        }
                     }
+                    drivingPanelHTML.push("<div class='flex-start-end-step'><span class='icon-driving end'></span>" + woosmap.$('.store-title').text() + "</div>");
+                    woosmap.$("#driving-panel").html(drivingPanelHTML.join(""));
                     map.setViewport(polyLineRoute.getPath(), {enableAnimation: true, zoomFactor: -1});
                 }
             }
@@ -129,10 +156,9 @@
 
     }
 
-    function renderRandomPhotos(cell, selector, photosSrc) {
-        console.log(cell);
+    function renderRandomPhotos(cell, selector, photosSrc, rootPath) {
         woosmap.$(cell).find(selector + " img").each(function () {
-            woosmap.$(this).attr("src", photosSrc[Math.floor(Math.random() * photosSrc.length)]);
+            woosmap.$(this).attr("src", rootPath + photosSrc[Math.floor(Math.random() * photosSrc.length)]);
         });
     }
 
@@ -153,8 +179,8 @@
             }
             woosmap.$('#search-input').addClass('selected-store');
             $selectedStoreHTML.show().html($selectedStoreCell);
-            renderRandomPhotos($selectedStoreHTML, '.store-photo-header', photosSrcFull);
-            renderRandomPhotos($selectedStoreHTML, '.store-photo-list', photosSrcThumbs);
+            renderRandomPhotos($selectedStoreHTML, '.store-photo-header', photosSrcFull, "/images/full/");
+            renderRandomPhotos($selectedStoreHTML, '.store-photo-list', photosSrcThumbs, "/images/thumbs/");
         }
         else {
             $selectedStoreHTML.removeClass().addClass('animated fadeOutRight');
@@ -170,7 +196,8 @@
         "<div class='store-opened'>{{openlabel}}</div></div>" +
         "<div class='content'><div class='store-address'>{{address.lines}} {{address.city}} {{address.zip}}</div>" +
         "{{#contact.phone}}<div class='store-contact'>Tel : <a href='tel:{{contact.phone}}'>{{contact.phone}}</a></div>{{/contact.phone}}" +
-        "</div></div><div class='controls store-photo-list'><ul><li><img/></li><li><img/></li><li><img/></li></ul></div>";
+        "</div></div><div class='store-photo-list'><div id='store-photo-list-header'>推荐菜</div><ul><li><img/></li><li><img/></li><li><img/></li><li><img/></li></ul>" +
+        "</div><div id='driving-panel' class='content'></div>";
 
 
     function getRenderedTemplate(store) {
@@ -209,7 +236,7 @@
         };
 
         tableview.setOnCellCreatedCallback(function (cell) {
-            renderRandomPhotos(cell[0], '.store-photo', photosSrcThumbs);
+            renderRandomPhotos(cell[0], '.store-photo', photosSrcThumbs, "/images/thumbs/");
         });
 
         mapView.bindTo('stores', tableview, 'stores', false);
