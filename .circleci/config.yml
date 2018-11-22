@@ -3,14 +3,16 @@ jobs:
   build-deploy:
     working_directory: ~/tmp
     docker:
-    - image: circleci/python:2.7-jessie
+    - image: circleci/node:latest
     steps:
-    - run: sudo pip install awscli
-    - run: sudo apt-get update
-    - run: sudo apt-get install nodejs
-    - run: sudo apt-get install npm
+    - run:
+        name: Install aws cli
+        command: |
+          sudo apt install python-pip python-dev
+          sudo pip install awscli
+          aws --version
     - checkout
-    - run: sudo npm install -g npm@latest && npm install --no-save
+    - run: npm install
     - run: npm run build
     - deploy:
         name: Deploy to S3 if branch is Master
@@ -24,3 +26,10 @@ workflows:
         filters:
           branches:
             only: master
+
+
+
+
+
+
+
