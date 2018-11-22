@@ -34,6 +34,7 @@
     let polyLineRoute = new BMap.Polyline(null, {strokeColor: "#3379C2", strokeOpacity: 1, strokeWeight: 8});
     let polyLineOverRoute = new BMap.Polyline(null, {strokeColor: "#01B3FD", strokeOpacity: 1, strokeWeight: 5});
     let currentSearch = "";
+    let selectedStoreId = "";
 
     function getMap() {
         const map = new BMap.Map('my-map');
@@ -257,9 +258,12 @@
         tableview.selectedStore_changed = function () {
             const selectedStore = tableview.get('selectedStore');
             if (selectedStore) {
-                const destPoint = new BMap.Point(selectedStore.geometry.coordinates[0], selectedStore.geometry.coordinates[1]);
-                drivingSearch(markerSearchLoc.getPosition(), destPoint, map);
-                toggleAndSlideTableview(getRenderedTemplate(selectedStore))
+                if (selectedStoreId !== selectedStore.properties.store_id) {
+                    selectedStoreId = selectedStore.properties.store_id;
+                    const destPoint = new BMap.Point(selectedStore.geometry.coordinates[0], selectedStore.geometry.coordinates[1]);
+                    drivingSearch(markerSearchLoc.getPosition(), destPoint, map);
+                    toggleAndSlideTableview(getRenderedTemplate(selectedStore))
+                }
             }
         };
 
