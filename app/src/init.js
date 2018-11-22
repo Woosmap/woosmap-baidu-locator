@@ -69,11 +69,17 @@
                         callback(latlng);
                     }
                     else {
-                        console.log("no location attached to this search");
+                        woosmap.$('#search-no-result').css('display', 'flex').addClass("animated fadeInDown");
+                        setTimeout(function () {
+                            woosmap.$('#search-no-result').removeClass().hide();
+                        }, 3000);
                     }
                 }
                 catch (e) {
-                    console.log("no location attached to this search");
+                    woosmap.$('#search-no-result').css('display', 'flex').addClass("animated fadeInDown");
+                    setTimeout(function () {
+                        woosmap.$('#search-no-result').removeClass().hide();
+                    }, 3000);
                 }
                 finally {
                     woosmap.$('.buttonContainer.load').hide();
@@ -120,6 +126,19 @@
             currentSearch = valueToSearch;
             localSearch.search(valueToSearch);
             autocomplete.setInputValue(valueToSearch);
+            woosmap.$('#' + inputId).blur();
+        });
+        woosmap.$('#' + inputId).keydown(function (event) {
+            if (event.which === 13) {
+                let valueToSearch = woosmap.$('#' + inputId).val();
+                if (autocomplete.getResults() && autocomplete.getResults().getPoi(0)) {
+                    valueToSearch = buildSearchText(autocomplete.getResults().getPoi(0));
+                }
+                currentSearch = valueToSearch;
+                localSearch.search(currentSearch);
+                autocomplete.setInputValue(valueToSearch);
+                woosmap.$('#' + inputId).blur();
+            }
         });
     }
 
@@ -171,11 +190,7 @@
             const $previousCell = $selectedStoreHTML.find(".woosmap-tableview-cell");
             if ($previousCell.length === 0) {
                 $listingStores.removeClass().addClass('animated fadeOutLeft');
-                $selectedStoreHTML.removeClass().show().addClass('animated fadeInRight');
-            }
-            else {
-                $previousCell.removeClass().addClass('animated fadeOutLeft');
-                $selectedStoreCell.addClass('animated fadeIn');
+                $selectedStoreHTML.removeClass().addClass('animated fadeInRight');
             }
             woosmap.$('#search-input').addClass('selected-store');
             $selectedStoreHTML.show().html($selectedStoreCell);
@@ -184,7 +199,7 @@
         }
         else {
             $selectedStoreHTML.removeClass().addClass('animated fadeOutRight');
-            $listingStores.removeClass().show().addClass('animated fadeInLeft');
+            $listingStores.removeClass().addClass('animated fadeInLeft');
             woosmap.$('#search-input').removeClass('selected-store');
         }
     }

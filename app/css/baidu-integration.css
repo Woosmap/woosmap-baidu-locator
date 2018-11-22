@@ -209,6 +209,23 @@ input[type=search]::-webkit-search-cancel-button, input[type=search]::-webkit-se
     transition-duration: 0.3s;
 }
 
+#search-no-result {
+    display: none;
+    position: absolute;
+    z-index: 1;
+    top: 60px;
+    justify-content: center;
+    padding: 1em;
+    left: 1.3rem;
+    right: 1.3rem;
+    background: #FFF;
+    border-radius: 3px;
+    transition-property: background, box-shadow;
+    transition-duration: 0.3s;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2), 0 -1px 0 rgba(0, 0, 0, 0.02);
+    margin-top: 10px;
+}
+
 .buttonContainer {
     display: block;
     height: 100%;
