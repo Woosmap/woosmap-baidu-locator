@@ -10,6 +10,7 @@ jobs:
     - run: sudo apt-get install nodejs
     - run: sudo apt-get install npm
     - checkout
+    - run: sudo npm install -g npm@latest
     - run: npm install
     - run: npm run build
     - deploy:
