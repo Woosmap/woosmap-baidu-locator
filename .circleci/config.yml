@@ -10,8 +10,7 @@ jobs:
     - run: sudo apt-get install nodejs
     - run: sudo apt-get install npm
     - checkout
-    - run: sudo npm install -g npm@latest
-    - run: npm install
+    - run: sudo npm install -g npm@latest && npm install --no-save
     - run: npm run build
     - deploy:
         name: Deploy to S3 if branch is Master
