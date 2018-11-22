@@ -9,10 +9,9 @@ jobs:
     - run: sudo apt-get update
     - run: sudo apt-get install nodejs
     - run: sudo apt-get install npm
+    - checkout
     - run: npm install
     - run: npm run build
-
-    - checkout
     - deploy:
         name: Deploy to S3 if branch is Master
         command: aws s3 sync build s3://demo.woosmap.com/baidu/ --region eu-central-1 --acl public-read
