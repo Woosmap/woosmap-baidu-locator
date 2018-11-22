@@ -24,4 +24,4 @@ $ npm run build
 
 
 ## Deployment
-each time tou Push to Master Branch, the app is built and deployer under [https://demo.woosmap.com/baidu/](https://demo.woosmap.com/baidu/) 
+each time you Push to Master Branch, the app is built and deployed under [https://demo.woosmap.com/baidu/](https://demo.woosmap.com/baidu/) 
