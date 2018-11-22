@@ -98,6 +98,7 @@
     justify-content: center;
     align-items: center;
     text-align: center;
+    padding: 1em;
     padding-top: 10%;
 }
 
@@ -192,7 +193,7 @@ input[type=search]::-webkit-search-cancel-button, input[type=search]::-webkit-se
     font-size: 17px !important;
 }
 
-#search-input:focus, .button:focus {
+#search-input:focus, button:focus {
     outline: none;
 }
 
@@ -296,6 +297,7 @@ input[type=search]::-webkit-search-cancel-button, input[type=search]::-webkit-se
     display: block;
     width: 100%;
     height: 250px;
+    background: #006341
 }
 
 .store-photo-header img {

@@ -26,6 +26,7 @@
         },
         breakPoint: 13
     };
+    const snippetSearchhere = '<div id="search-here"><div class="text-center"><h4 >Woosmap和百度</h4><p>商店定位器</p><button id="search-here-btn" type="submit">我的附近</button></div></div>';
     const photosSrcThumbs = ["1.jpg", "2.jpg", "3.jpg", "4.jpg", "5.jpg", "6.jpg", "7.jpg", "8.jpg", "9.jpg", "10.jpg", "11.jpg", "12.jpg", "13.jpg", "14.jpg", "15.jpg", "16.jpg", "17.jpg", "18.jpg", "19.jpg", "20.jpg", "21.jpg", "22.jpg", "23.jpg", "24.jpg", "25.jpg", "26.jpg", "27.jpg", "28.jpg", "29.jpg", "30.jpg", "31.jpg", "32.jpg", "33.jpg", "34.jpg", "35.jpg", "36.jpg"];
     const photosSrcFull = ["1.jpg", "2.jpg", "3.jpg", "4.jpg", "5.jpg", "6.jpg", "7.jpg", "8.jpg", "9.jpg", "10.jpg", "11.jpg", "12.jpg", "13.jpg", "14.jpg", "15.jpg", "16.jpg", "17.jpg", "18.jpg", "19.jpg", "20.jpg", "21.jpg", "22.jpg", "23.jpg"];
     const iconSearchLoc = new BMap.Icon("https://www.woosmap.com/assets/locationanimation.svg", new BMap.Size(56, 56));
@@ -157,13 +158,10 @@
     }
 
     function renderRandomPhotos(cell, selector, photosSrc, rootPath) {
-        console.log(cell, selector);
         woosmap.$(cell).find(selector + " img").each(function (index) {
-            console.log(index);
             woosmap.$(this).attr("src", rootPath + photosSrc[Math.floor(Math.random() * photosSrc.length)]);
         });
     }
-
 
     function toggleAndSlideTableview(selectedStoreCell) {
         const $selectedStoreHTML = woosmap.$('#selected-store-container');
@@ -177,11 +175,10 @@
             }
             else {
                 $previousCell.removeClass().addClass('animated fadeOutLeft');
-                $selectedStoreCell.addClass('animated fadeInRight');
+                $selectedStoreCell.addClass('animated fadeIn');
             }
             woosmap.$('#search-input').addClass('selected-store');
             $selectedStoreHTML.show().html($selectedStoreCell);
-            $selectedStoreHTML.addClass('animated fadeInRight');
             renderRandomPhotos($selectedStoreHTML, '.store-photo-header', photosSrcFull, "./images/full/");
             renderRandomPhotos($selectedStoreHTML, '.store-photo-list', photosSrcThumbs, "./images/thumbs/");
         }
@@ -193,13 +190,13 @@
     }
 
     const selectedStoreTemplate = "<div class='woosmap-tableview-cell'>" +
-        "<div class='store-photo-header'><img src='images/full/1.jpg'/></div>" +
+        "<div class='store-photo-header'><img /></div>" +
         "<div class='selected-store-card'><div class='hero'>" +
         "<div class='store-title'>{{name}}</div>" +
         "<div class='store-opened'>{{openlabel}}</div></div>" +
         "<div class='content'><div class='store-address'>{{address.lines}} {{address.city}} {{address.zip}}</div>" +
         "{{#contact.phone}}<div class='store-contact'>Tel : <a href='tel:{{contact.phone}}'>{{contact.phone}}</a></div>{{/contact.phone}}" +
-        "</div></div><div class='store-photo-list'><div id='store-photo-list-header'>推荐菜</div><ul><li><img/></li><li><img/></li><li><img/></li><li><img/></li></ul>" +
+        "</div></div><div class='store-photo-list'><div id='store-photo-list-header'>推荐菜</div><ul><li><img src='./images/starbucks-bg.png'/></li><li><img src='./images/starbucks-bg.png'/></li><li><img src='./images/starbucks-bg.png'/></li><li><img src='./images/starbucks-bg.png'/></li></ul>" +
         "</div><div id='driving-panel' class='content'></div>";
 
 
@@ -235,10 +232,11 @@
                 '{{#contact.phone}}<div>Tel : <a href="tel:{{contact.phone}}">{{contact.phone}}</a></div>{{/contact.phone}}' +
                 '</div>' +
                 '</div>' +
-                '<div class="store-photo"><img src="https://images.woosmap.com/starbucks-bg.png"/></div>' +
+                '<div class="store-photo"><img src="./images/starbucks-bg.png"/></div>' +
                 '</div>'
         });
 
+        woosmap.$(tableview.getContainer()).html(snippetSearchhere);
         woosmap.$('#listing-stores-container').append(tableview.getContainer());
 
         tableview.selectedStore_changed = function () {
@@ -270,7 +268,6 @@
             const latlngPoint = map.getCenter();
             searchStores(dataSource, tableview, latlngPoint);
             displayMarkerSearch(map, latlngPoint);
-            woosmap.$("#search-here").remove();
             currentSearch = '北京市';
         });
     }
