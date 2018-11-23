@@ -209,21 +209,46 @@ input[type=search]::-webkit-search-cancel-button, input[type=search]::-webkit-se
     transition-duration: 0.3s;
 }
 
-#search-no-result {
+#search-no-result, #back-to-results {
     display: none;
     position: absolute;
     z-index: 1;
     top: 60px;
     justify-content: center;
-    padding: 1em;
     left: 1.3rem;
-    right: 1.3rem;
     background: #FFF;
     border-radius: 3px;
     transition-property: background, box-shadow;
     transition-duration: 0.3s;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2), 0 -1px 0 rgba(0, 0, 0, 0.02);
     margin-top: 10px;
+}
+
+#search-no-result {
+    right: 1.3rem;
+    padding: 1em;
+}
+
+#back-to-results {
+    display: flex;
+    padding: .5em;
+    padding-left: 1.3em;
+    font-size: .8em;
+    background: rgba(255, 255, 255, 0.75);
+    color: #006440;
+    cursor: pointer;
+}
+
+#back-to-results:hover {
+    background: #FFF;
+}
+
+#back-to-results:before {
+    font-size: 18px;
+    content: "\2039";
+    position: absolute;
+    left: 5px;
+    top: 2px;
 }
 
 .buttonContainer {

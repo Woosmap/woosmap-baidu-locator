@@ -35,15 +35,16 @@
     let polyLineOverRoute = new BMap.Polyline(null, {strokeColor: "#01B3FD", strokeOpacity: 1, strokeWeight: 5});
     let currentSearch = "";
     let selectedStoreId = "";
+    let map, mapView, tableView, dataSource = null;
 
     function getMap() {
-        const map = new BMap.Map('my-map');
+        map = new BMap.Map('my-map');
         map.centerAndZoom(new BMap.Point(116.3964, 39.9093), 13);
         map.enableScrollWheelZoom();
         return map;
     }
 
-    function displayMarkerSearch(map, point) {
+    function displayMarkerSearch(point) {
         map.clearOverlays();
         markerSearchLoc.setPosition(point);
         map.addOverlay(markerSearchLoc);
@@ -54,35 +55,31 @@
             const scroll = $listingStores.scrollTop();
             if (scroll > 0) {
                 $listingStores.addClass("active");
-            }
-            else {
+            } else {
                 $listingStores.removeClass("active");
             }
         });
     }
 
-    function registerAutocomplete(map, inputId, callback) {
+    function registerAutocomplete(inputId, callback) {
         const localSearch = new BMap.LocalSearch(map, {
             onSearchComplete: function (searchResult) {
                 try {
                     if (searchResult.getPoi(0)) {
                         const latlng = searchResult.getPoi(0).point;
                         callback(latlng);
-                    }
-                    else {
+                    } else {
                         woosmap.$('#search-no-result').css('display', 'flex').addClass("animated fadeInDown");
                         setTimeout(function () {
                             woosmap.$('#search-no-result').removeClass().hide();
                         }, 3000);
                     }
-                }
-                catch (e) {
+                } catch (e) {
                     woosmap.$('#search-no-result').css('display', 'flex').addClass("animated fadeInDown");
                     setTimeout(function () {
                         woosmap.$('#search-no-result').removeClass().hide();
                     }, 3000);
-                }
-                finally {
+                } finally {
                     woosmap.$('.buttonContainer.load').hide();
                     woosmap.$('.buttonContainer.clear').show();
                 }
@@ -131,6 +128,8 @@
         });
         woosmap.$('#' + inputId).keydown(function (event) {
             if (event.which === 13) {
+                woosmap.$('.buttonContainer.clear').hide();
+                woosmap.$('.buttonContainer.load').show();
                 let valueToSearch = woosmap.$('#' + inputId).val();
                 if (autocomplete.getResults() && autocomplete.getResults().getPoi(0)) {
                     valueToSearch = buildSearchText(autocomplete.getResults().getPoi(0));
@@ -143,7 +142,7 @@
         });
     }
 
-    function drivingSearch(pointA, pointB, map) {
+    function drivingSearch(pointA, pointB) {
         var options = {
             onSearchComplete: function (results) {
                 map.removeOverlay(polyLineRoute);
@@ -177,6 +176,12 @@
 
     }
 
+    function clearMapSelectedStore() {
+        map.removeOverlay(polyLineRoute);
+        map.removeOverlay(polyLineOverRoute);
+        tableView.set('selectedStore', null);
+    }
+
     function renderRandomPhotos(cell, selector, photosSrc, rootPath) {
         woosmap.$(cell).find(selector + " img").each(function (index) {
             woosmap.$(this).attr("src", rootPath + photosSrc[Math.floor(Math.random() * photosSrc.length)]);
@@ -190,15 +195,23 @@
             $selectedStoreCell = woosmap.$(selectedStoreCell).html();
             const $previousCell = $selectedStoreHTML.find(".woosmap-tableview-cell");
             if ($previousCell.length === 0) {
-                $listingStores.removeClass().addClass('animated fadeOutLeft');
+                $listingStores.removeClass('animated fadeOutLeft fadeInLeft').addClass('animated fadeOutLeft');
                 $selectedStoreHTML.removeClass().addClass('animated fadeInRight');
             }
             woosmap.$('#search-input').addClass('selected-store');
             $selectedStoreHTML.show().html($selectedStoreCell);
+            if ($listingStores.hasClass('home')) {
+                woosmap.$('#back-to-results').html('Back to home');
+            } else {
+                woosmap.$('#back-to-results').html('Back to results');
+            }
+            woosmap.$('#back-to-results').click(function () {
+                toggleAndSlideTableview();
+                clearMapSelectedStore();
+            });
             renderRandomPhotos($selectedStoreHTML, '.store-photo-header', photosSrcFull, "./images/full/");
             renderRandomPhotos($selectedStoreHTML, '.store-photo-list', photosSrcThumbs, "./images/thumbs/");
-        }
-        else {
+        } else {
             $selectedStoreHTML.removeClass().addClass('animated fadeOutRight');
             $listingStores.removeClass().addClass('animated fadeInLeft');
             woosmap.$('#search-input').removeClass('selected-store');
@@ -206,7 +219,7 @@
     }
 
     const selectedStoreTemplate = "<div class='woosmap-tableview-cell'>" +
-        "<div class='store-photo-header'><img /></div>" +
+        "<div class='store-photo-header'><img /><div id='back-to-results'></div></div>" +
         "<div class='selected-store-card'><div class='hero'>" +
         "<div class='store-title'>{{name}}</div>" +
         "<div class='store-opened'>{{openlabel}}</div></div>" +
@@ -223,7 +236,7 @@
         return templateRenderer.render(store.properties);
     }
 
-    function searchStores(dataSource, tableView, latlng) {
+    function searchStores(latlng) {
         dataSource.searchStoresByParameters(
             new woosmap.search.SearchParameters({
                 lat: latlng.lat,
@@ -231,15 +244,16 @@
                 storesByPage: 10
             }), function (stores) {
                 tableView.set('stores', stores.features);
+                woosmap.$('#listing-stores-container').removeClass('home');
                 toggleAndSlideTableview();
             });
     }
 
     function main() {
-        const map = getMap();
-        const mapView = new woosmap.TiledView(map, woosmapOptions);
-        const dataSource = new woosmap.DataSource();
-        const tableview = new woosmap.ui.TableView({
+        map = getMap();
+        mapView = new woosmap.TiledView(map, woosmapOptions);
+        dataSource = new woosmap.DataSource();
+        tableView = new woosmap.ui.TableView({
             cell: '<div class="controls store-card">' +
                 '<div>' +
                 '<div><strong>{{name}} - {{address.city}}</strong></div>' +
@@ -252,41 +266,39 @@
                 '</div>'
         });
 
-        woosmap.$(tableview.getContainer()).html(snippetSearchhere);
-        woosmap.$('#listing-stores-container').append(tableview.getContainer());
+        woosmap.$(tableView.getContainer()).html(snippetSearchhere);
+        woosmap.$('#listing-stores-container').append(tableView.getContainer());
 
-        tableview.selectedStore_changed = function () {
-            const selectedStore = tableview.get('selectedStore');
+        tableView.selectedStore_changed = function () {
+            const selectedStore = tableView.get('selectedStore');
             if (selectedStore) {
-                if (selectedStoreId !== selectedStore.properties.store_id) {
-                    selectedStoreId = selectedStore.properties.store_id;
-                    const destPoint = new BMap.Point(selectedStore.geometry.coordinates[0], selectedStore.geometry.coordinates[1]);
-                    drivingSearch(markerSearchLoc.getPosition(), destPoint, map);
-                    toggleAndSlideTableview(getRenderedTemplate(selectedStore))
-                }
+                selectedStoreId = selectedStore.properties.store_id;
+                const destPoint = new BMap.Point(selectedStore.geometry.coordinates[0], selectedStore.geometry.coordinates[1]);
+                drivingSearch(markerSearchLoc.getPosition(), destPoint, map);
+                toggleAndSlideTableview(getRenderedTemplate(selectedStore), tableView)
             }
         };
 
-        tableview.setOnCellCreatedCallback(function (cell) {
+        tableView.setOnCellCreatedCallback(function (cell) {
             renderRandomPhotos(cell[0], '.store-photo', photosSrcThumbs, "./images/thumbs/");
         });
 
-        mapView.bindTo('stores', tableview, 'stores', false);
-        mapView.bindTo('selectedStore', tableview, 'selectedStore', false);
+        mapView.bindTo('stores', tableView, 'stores', false);
+        mapView.bindTo('selectedStore', tableView, 'selectedStore', false);
 
         woosmap.maps.utils.fitBounds = function fitBounds(map, bounds) {
             bounds.extend(markerSearchLoc.getPosition());
             map.setViewport([bounds.getSouthWest(), bounds.getNorthEast()])
         };
 
-        registerAutocomplete(map, "search-input", function (latlng) {
-            searchStores(dataSource, tableview, latlng);
-            displayMarkerSearch(map, latlng);
+        registerAutocomplete("search-input", function (latlng) {
+            searchStores(latlng);
+            displayMarkerSearch(latlng);
         });
         woosmap.$("#search-here-btn").click(function () {
             const latlngPoint = map.getCenter();
-            searchStores(dataSource, tableview, latlngPoint);
-            displayMarkerSearch(map, latlngPoint);
+            searchStores(latlngPoint);
+            displayMarkerSearch(latlngPoint);
             currentSearch = '北京市';
         });
     }
