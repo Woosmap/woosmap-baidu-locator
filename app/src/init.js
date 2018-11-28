@@ -232,7 +232,7 @@
     function getRenderedTemplate(store) {
         const templateRenderer = new woosmap.TemplateRenderer(selectedStoreTemplate);
         const url = store.properties.contact.website;
-        store.properties.openlabel = (store.properties.open.open_now) ? "Open Now" : "Close";
+        store.properties.openlabel = (store.properties.open && store.properties.open.open_now) ? "Open Now" : "Close";
         return templateRenderer.render(store.properties);
     }
 
