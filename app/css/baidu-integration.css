@@ -9,7 +9,7 @@
 
 #my-map-container {
     display: flex;
-    flex-basis: 65vw;
+    flex-basis: 100%;
     order: 2;
     position: relative;
     height: 100%;
