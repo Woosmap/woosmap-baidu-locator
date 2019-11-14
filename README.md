@@ -1,5 +1,5 @@
 # Baidu Store Locator
-Thanks to Woosmap Javascript SDK : [https://developers.woosmap.com/js-api/get-started.html](https://developers.woosmap.com/js-api/get-started.html)
+Thanks to Woosmap Javascript SDK : [https://developers.woosmap.com/products/js-api/examples/map/baidu-maps/](https://developers.woosmap.com/products/js-api/examples/map/baidu-maps/)
 
 See it here: [https://demo.woosmap.com/baidu/](https://demo.woosmap.com/baidu/)
 
